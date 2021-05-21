@@ -1,0 +1,49 @@
+install.packages("FactoMineR")
+library(FactoMineR)
+library(readxl)
+data <- read_excel("NewcombR2.xlsx", n_max = 50)
+
+    #####################
+    #### Choix boite ####
+    #####################
+  
+## Ensemble des sujets (N = 42) ##
+tChoix <- table(data$Choix)
+pie(tChoix, main = 'Choix de tous les sujets (N=42)', 
+    labels = c('Unique boite', 'Deux boites'), col = c("darkblue", "red"))
+
+  # Filles (N = 23) #
+tChoixF <- table(data$Choix [data$Sexe == 'F'])
+pie(tChoixF,main = 'Choix des femmes (N=23)', 
+    labels = c('Unique boite', 'Deux boites'), col = c("darkblue", "red"))
+
+  # Garcons (N = 19) #
+tChoixM <- table(data$Choix [data$Sexe == 'M'])
+pie(tChoixM, main = 'Choix des hommes (N=19)', 
+    labels = c('Unique boite', 'Deux boites'), col = c("darkblue", "red"))
+
+  # 18-25 (N = 29) #
+tChoix18 <- table(data$Choix[data$Age == '18+'])
+pie(tChoix18, main = 'Choix des moins de 25 ans (N=29)', 
+    labels = c('Unique boite', 'Deux boites'), col = c("darkblue", "red"))
+
+  # 25+ (N = 13) #
+tChoix25 <- table(data$Choix[data$Age != '18+'])
+pie(tChoix25, main = 'Choix des plus de 25 and (N=13)', 
+    labels = c('Unique boite', 'Deux boites'), col = c("darkblue", "red"))
+
+tSexeChoix <- table(data$Choix, data$Sexe)
+barplot(tSexeChoix, main = "Choix du nombre de boites \n par Sexe", 
+        legend = TRUE,  ylim = c(0,25), col = c('darkblue', 'red'))
+
+tAgeChoix <- table(data$Choix, data$Age)
+barplot(tAgeChoix, main = "Choix du nombre de boites \n par tranche d'age", 
+        legend = TRUE,  ylim = c(0,25), col = c('darkblue', 'red'))
+
+    ############################################
+    #### Analyse en composantes principales ####
+    ############################################
+
+  ## Corrélations entre choix et crédibilité accordée à différentes résolutions ##
+
+res.pca = PCA(data[,8:13], scale.unit=T, ncp=5, graph=T)
