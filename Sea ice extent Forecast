@@ -1,0 +1,238 @@
+##################################################################
+#### import des packages et des fonctions utiles dans le code ####
+#### Chargement des fichiers de données                       ####
+##################################################################
+
+import numpy as np
+import math
+import matplotlib.pyplot as plt
+import pandas as pd
+import statistics as st
+from scipy.stats import norm
+
+data_sept=pd.read_excel(r'/content/extent_data_sept.xlsx')              #on importe le fichier excel qui contient les données nécessaires
+ice_ext_sept=pd.DataFrame(data_sept, columns=['Extent']).to_numpy()     #on crée des vecteurs qui contienne les valeurs d'une certaine colonne dans le fichier excel
+y=pd.DataFrame(data_sept, columns=['Year']).to_numpy()
+data_may=pd.read_excel(r'/content/extent_data_may.xlsx')
+ice_ext_may=pd.DataFrame(data_may, columns=['Extent']).to_numpy()
+data=pd.read_excel(r'/content/extent_data.xlsx')
+ice_ext=pd.DataFrame(data, columns=['Extent']).to_numpy()
+
+################################################
+#### Générer graphique des données mesurées ####
+################################################
+
+xtick=np.linspace(0,41, num=7, dtype=int)                   #vecteur utilisé après
+years=np.linspace(1979,2020, num=7, dtype=int)
+
+fig=plt.figure()                                            #création d'une figure
+ax=fig.add_subplot(111)
+ax.plot(ice_ext_sept, color='black')                        #plot la courbe sur la figure
+
+ax.set_xlabel('Time [y]')                                   #titre pour les axes x et y du plot
+ax.set_ylabel('Sea ice extent [km]$^2$')
+
+plt.xticks(xtick, years)                                    #j'utilise les vecteurs créés précédemment pour changers les valeurs représentées sur les axes
+
+ax.set_ylim(3*10**6,8.5*10**6)                              #limite du lot pour mieu comparer les résultats avec la courbe de Serreze et Meier
+
+
+plt.show()                                                  #montre le plot quand on lance le code
+
+###################################################################
+#### Calcul des valeurs a et b pour la fonction de la tendance ####
+###################################################################
+
+ext_tilde=[]                                     #création de vecteur pour les valeurs des x et y tildes qu'on calcul après
+y_tilde=[]
+mean_y=np.mean(y)                                #moyenne des valeurs des années
+sq=0                                             #création d'une constante "sq" (somme des carrés des  tildes de l'énoncé) que l'on calculera après dans le loop
+
+i=0
+while i<len(ice_ext_sept):                       #loop qui calcul les valeurs des x tildes de l'énoncé et de la constante "sq".
+  y_tilde.append(y[i]-mean_y)
+  sq+=(y_tilde[i])*(y_tilde[i])
+  i+=1
+
+a=0                                              #constante "a" de l'énoncé que l'on va calculer
+
+mean_ext=np.mean(ice_ext_sept)                   #moyenne des valeurs de l'étendu de la glace en septembre pour chaque année
+
+i=0
+while i<len(ice_ext_sept):                       #loop qui calcul les valeurs des y tildes de l'énoncé et de la constante "a" de l'énoncé
+  ext_tilde.append(ice_ext_sept[i]-mean_ext)
+  a+=(y_tilde[i]*ext_tilde[i])/sq
+  i+=1
+
+b=mean_ext-a*mean_y                              #calcul de la constante "b" de l'énoncé
+
+trend=[]                                         #création du vecteur "trend" que l'on rempliera après
+
+i=0
+while i<len(ice_ext_sept):                       #loop qui calcul les valeurs du vecteur "trend" pour chaque année
+  trend.append(b+a*y[i])
+  i+=1
+
+print(trend[41])                                 #réponse à la question et valeur de la pente printé quand on lance le code
+print((trend[30]-trend[20])/trend[20]*100)
+
+###########################################################
+#### Générer le graphique des mesures avec la tendance ####
+###########################################################
+
+xtick=np.linspace(0,41, num=7, dtype=int)
+years=np.linspace(1979,2020, num=7, dtype=int)
+
+fig=plt.figure()
+ax=fig.add_subplot(111)
+ax.plot(ice_ext_sept, color='black')
+ax.plot(trend, color='red')
+ax.set_xlabel('Time [y]')
+ax.set_ylabel('Sea ice extent [km]$^2$')
+plt.xticks(xtick, years)
+ax.set_ylim(3*10**6,8.5*10**6)
+plt.show()
+
+######################################################
+#### Calcul/identification des années à évènement ####
+###################################################### 
+
+event=[0.2*10**7, 0.2*10**7]                            #création du vecteur "event" qui contient les valeurs de l'étendu de la glace quad l'event a lieu
+event_y=[]
+freqs=[]                                                #création du vecteur qui contient les années ou l'event a lieu
+cancel=[0.2*10**7, 0.2*10**7]                           #création d'un vecteur qui cachera les valeurs du vecteur "event" non voulues sur la figure
+
+i=2
+while i<len(ice_ext_sept):                              #loop qui remplit les trois vecteurs en fonction de si l'event a lieu ou pas
+  if ice_ext_sept[i]<ice_ext_sept[i-1]:
+    event_y.append(int(y[i]))
+    event.append(ice_ext_sept[i])
+  else:
+    event.append(0.2*10**7)
+  freqs.append(len(event_y)/len(ice_ext_sept[:i]))
+  cancel.append(0.2*10**7)
+  i+=1
+
+print("Années ou l'evenement se produit:", event_y)     #print les années ou l'event a lieu quand on lance le code
+print("Frequences correspondantes:", freqs)
+
+###############################################################
+#### Génerer le graphique des mesures avec la tendance     ####
+#### Y ajouter des marqueurs pour chaque evenement observé ####
+###############################################################
+
+xtick=np.linspace(0,41, num=7, dtype=int)
+years=np.linspace(1979,2020, num=7, dtype=int)
+
+fig=plt.figure()
+ax=fig.add_subplot(111)
+ax.plot(ice_ext_sept, color='black')
+ax.plot(trend, color='red')
+ax.plot(event, 'o',  color='blue', markersize=4)
+ax.plot(cancel,  color='white', linewidth=5 )
+
+i=0
+while i<len(ice_ext_sept):                               #plot des lignes verticales bleues qui permettent d'avoir une meilleur idée de la fréquence des events
+  if event[i]!=0.2*10**7:
+    plt.axvline(i,ymin=0, ymax=(event[i]-3*10**6)/(8.5*10**6-3*10**6),linestyle='--', color='blue')
+  i+=1
+
+ax.set_xlabel('Time [y]')
+ax.set_ylabel('Sea ice extent [km]$^2$')
+plt.xticks(xtick, years)
+ax.set_ylim(3*10**6,8.5*10**6)
+plt.show()
+
+#####################################################
+#### Générer le graphique avec les mesures,      ####
+#### les prévisions avec incertitude et la trend ####
+#####################################################
+
+plt.plot(ys[2:], septs[2:], color = 'black', label='Actual data')
+plt.plot(ys[2:], fc_sept, color = 'blue', label='September previsions')
+plt.plot(y, trend, color = 'red', label='Actual data trend')
+
+
+
+plt.fill_between(ys[2:], np.array(fc_sept)+np.array(stdev), np.array(fc_sept)-np.array(stdev), color='blue', alpha=0.15)
+plt.title('September previsions compared to actual data')
+plt.xlabel('Time [y]')
+plt.ylabel('Sea ice extent [km]$^2$')
+
+plt.legend(loc='best')
+
+plt.show()
+
+###############################################################################
+#### Calcul des probabilités que l'évènement se produise pour chaque année ####
+###############################################################################
+
+probs = []
+
+for i in range(2, len(septs)):
+  var_sept = math.sqrt((st.variance(septs[0:i]) + st.variance(mays[0:i])+2*cov)/i)
+  arg = (septs[i-1]-fc_sept[i-2])/(3*var_sept)                        # i-2 parce que fc_septs commence en 81 alors que septs en 79 
+  probs.append(norm.cdf(arg))
+
+plt.plot(ys[2:], probs, color = 'black')
+plt.title('Probabilities of event for normal distribution')
+plt.xlabel('Time [y]')
+plt.ylabel('Probability')
+
+# Indiquer les evenements sur le graph (points bleus)
+# Créer dictionnaire avec années et valeurs septembre
+# Créer liste avec probabilités des années des evenements 
+# et remplir en itérant dans le dictionnaire pour les années d'evenement
+
+dico_probs = dict(zip(ys[2:], probs))   
+event_probs = []
+for i in event_y:
+  event_probs.append(dico_probs[i])
+
+plt.plot(event_y, event_probs, 'o', color = "blue")
+plt.show()
+
+####################################
+#### Calcul des scores de Brier ####
+#################################### 
+
+pi = probs
+oi = []
+
+for i in ys[2:]:
+  if i in event_y:
+    oi.append(1)
+  else:
+    oi.append(0)
+
+sum = 0
+for i in range(len(ys[2:])):
+  sum += (pi[i] - oi[i])**2
+
+BS = sum/len(ys[2:])
+
+sumr = 0
+for i in range(len(ys[2:])):
+  sumr += (freqs[i] - oi[i])**2
+
+BSR = sumr/len(ys[2:])
+BSS = (BS - BSR)/(- BSR)
+
+print("BS =",BS,"BSR =",BSR,"BSS =",BSS)
+
+mu = int(mean_sept + 12868298 - mean_mays)
+cov=np.cov(septs,mays)
+cov=cov[0,1]
+variance = var_sept = math.sqrt((st.variance(septs) + st.variance(mays)+2*cov)/i)
+x = np.linspace(mu-4*10**6, mu+4*10**6, 100)
+
+plt.plot(x, norm.pdf(x, mu, 3*variance), color='black')
+plt.axvline(x=septs[-1], ymin=0, ymax=(norm.pdf(septs[-1], mu, 3*variance))/(5.75*10**(-7)), linestyle='--', color='darkred')
+plt.plot(septs[-1], norm.pdf(septs[-1], mu, 3*variance), 'o', markersize=4, color='darkred')
+plt.xlim(mu-3*10**6,mu+3*10**6)
+plt.ylim(0,5.75*10**(-7))
+px=np.arange(mu-4*10**6, septs[-1], 100)
+plt.fill_between(px,norm.pdf(px, mu, 3*variance),color='red', alpha=0.5)
+plt.show()
+P = (septs[-1]-mu)/(3*variance)
+print("The probability for the event to happen is", norm.cdf(P))
