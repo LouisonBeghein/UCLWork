@@ -413,6 +413,7 @@ print("The probability for the event to happen is", norm.cdf(P))
 ##################################################
 
 mu = int(mean_sept + 12868298 - mean_mays)
+print("The predicted value for the mean september 2021 see ice extent is:", mu)
 cov=np.cov(septs,mays)
 cov=cov[0,1]
 variance = var_sept = math.sqrt((st.variance(septs) + st.variance(mays)+2*cov)/i)
@@ -420,6 +421,7 @@ x = np.linspace(mu-4*10**6, mu+4*10**6, 100)
 
 plt.plot(x, norm.pdf(x, mu, 3*variance), color='black')
 plt.axvline(x=septs[-1], ymin=0, ymax=(norm.pdf(septs[-1], mu, 3*variance))/(5.75*10**(-7)), linestyle='--', color='darkred')
+plt.axvline(x=mu, ymin=0, ymax=(norm.pdf(septs[-1], mu, 3*variance))/(5.75*10**(-7)), color='grey')
 plt.plot(septs[-1], norm.pdf(septs[-1], mu, 3*variance), 'o', markersize=4, color='darkred')
 plt.xlim(mu-3*10**6,mu+3*10**6)
 plt.ylim(0,5.75*10**(-7))
@@ -431,3 +433,4 @@ plt.fill_between(px,norm.pdf(px, mu, 3*variance),color='red', alpha=0.5)
 plt.show()
 P = (septs[-1]-mu)/(3*variance)
 print("The probability for the event to happen is", norm.cdf(P))
+print(septs[-1])
