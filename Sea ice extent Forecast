@@ -143,6 +143,176 @@ plt.xticks(xtick, years)
 ax.set_ylim(3*10**6,8.5*10**6)
 plt.show()
 
+###############################
+#### Calcul des prévisions ####
+###############################
+
+
+#créér des listes sans fausses valeurs a partir des données uploadées
+#Filtrer les données erronnées dans la for-loop (on ajoute a nos listes que les valeurs ou il n'y pas d'erreurs)
+
+septs = []
+ys = []
+mays=[]
+
+ice_ext_mays=ice_ext_may
+
+
+for i in range(len(y)):
+  if ice_ext_mays[i] != -999 and ice_ext_sept[i] != -999:
+    septs.append(int(ice_ext_sept[i]))
+    mays.append(int(ice_ext_mays[i]))
+
+    ys.append(int(y[i]))
+
+
+
+def trend_calcul(i):
+  year_sept=i+1+1979
+  sample_t=15
+  ext_tilde_sept=[]                                     
+  y_tilde_sept=[]
+  y_sept=[]
+
+  
+  if year_sept-1979<sample_t:
+    j=1979
+    while j<=year_sept:
+      y_sept.append(j)
+      j+=1
+
+    mean_y_sept=np.mean(y_sept) 
+
+    sq=0                                             
+
+    i=0
+    while i<len(y_sept):   
+      y_tilde_sept.append(y_sept[i]-mean_y_sept)               
+      sq+=(y_tilde_sept[i])*(y_tilde_sept[i])
+      i+=1
+
+    a=0
+
+    ice_ext_sept2=[]    
+
+    j=0
+    while j<len(y_sept):
+      ice_ext_sept2.append(ice_ext_sept[j])
+      j+=1                                          
+
+    mean_ext_sept=np.mean(ice_ext_sept2)                   
+
+    i=0
+    while i<len(y_sept):                       
+      ext_tilde_sept.append(ice_ext_sept2[i]-mean_ext_sept)
+      a+=(y_tilde_sept[i]*ext_tilde_sept[i])/sq
+      i+=1
+
+    b=mean_ext_sept-a*mean_y_sept                              
+
+    trend_sept=[]  
+    y_sept_2=[]                                       
+
+    i=0
+    while i<len(y_sept):
+      if  ice_ext_mays[i] != -999 and ice_ext_sept[i] != -999:                      
+        trend_sept.append(int(b+a*y_sept[i]))
+        y_sept_2.append(1979+i)
+      i+=1
+
+  else:
+    j=year_sept-sample_t
+    while j<=year_sept:
+      y_sept.append(j)
+      j+=1
+
+    mean_y_sept=np.mean(y_sept) 
+
+    sq=0  
+
+                                               
+
+    i=0
+    while i<len(y_sept):   
+      y_tilde_sept.append(y_sept[i]-mean_y_sept)               
+      sq+=(y_tilde_sept[i])*(y_tilde_sept[i])
+      i+=1
+
+    a=0
+
+    ice_ext_sept2=[]   
+
+    j=0
+    while j<len(y_sept):
+      ice_ext_sept2.append(ice_ext_sept[year_sept-1979-sample_t+j])
+      j+=1                                          
+
+    mean_ext_sept=np.mean(ice_ext_sept2)                   
+
+    i=0
+    while i<len(y_sept):                       
+      ext_tilde_sept.append(ice_ext_sept2[i]-mean_ext_sept)
+      a+=(y_tilde_sept[i]*ext_tilde_sept[i])/sq
+      i+=1
+
+    b=mean_ext_sept-a*mean_y_sept                              
+
+    trend_sept=[]  
+    y_sept_2=[]                                
+
+    i=0
+    while i<len(y_sept):
+      if  ice_ext_mays[year_sept-1979-sample_t+i] != -999 and ice_ext_sept[year_sept-1979-sample_t+i] != -999:                      
+        trend_sept.append(int(b+a*y_sept[i]))
+        y_sept_2.append(year_sept-sample_t+i)
+      i+=1
+
+
+
+  return trend_sept[-1], trend_sept, y_sept_2
+
+
+
+#créer des listes des valeurs qu'on veut plotter et les remplir dans la for-loop
+
+fc_sept = []
+stdev = []
+
+for i in range(2, len(septs)):    # commencer au 3eme élément
+  
+  #Calculer les moyennes pour chaque année avec les données des années précédentes et calculer la variance
+  
+
+  mean_sept, trend_sept, _=trend_calcul(i)
+  mean_mays=st.mean(mays[0:i])
+
+  cov=np.cov(septs[0:i],mays[0:i])
+  cov=cov[0,1]
+  var_sept = math.sqrt((st.variance(septs[0:i]) + st.variance(mays[0:i])+2*cov)/i)         # pour le ième élément on a i éléments précédents donc ni = i 
+
+  fc_sept.append(int(mean_sept + mays[i] - mean_mays))
+
+  stdev.append(3*var_sept)
+
+
+#réaliser le plot des prévisions
+
+xtick=np.linspace(0,41, num=7, dtype=int)
+years=np.linspace(1979,2020, num=7, dtype=int)
+
+plt.plot(ys[2:], fc_sept, color = 'blue')
+plt.fill_between(ys[2:], np.array(fc_sept)+np.array(stdev), np.array(fc_sept)-np.array(stdev), color='blue', alpha=0.15)
+plt.plot(ys,septs, color='black')
+
+#plt.title('September previsions')
+plt.xlabel('Time [y]')
+plt.ylabel('Sea ice extent [km]$^2$')
+#plt.ylim(6*10**6,9*10**6)
+#plt.xlim(1978,2000)
+plt.show()
+
+
+
 #####################################################
 #### Générer le graphique avec les mesures,      ####
 #### les prévisions avec incertitude et la trend ####
@@ -231,6 +401,31 @@ plt.axvline(x=septs[-1], ymin=0, ymax=(norm.pdf(septs[-1], mu, 3*variance))/(5.7
 plt.plot(septs[-1], norm.pdf(septs[-1], mu, 3*variance), 'o', markersize=4, color='darkred')
 plt.xlim(mu-3*10**6,mu+3*10**6)
 plt.ylim(0,5.75*10**(-7))
+px=np.arange(mu-4*10**6, septs[-1], 100)
+plt.fill_between(px,norm.pdf(px, mu, 3*variance),color='red', alpha=0.5)
+plt.show()
+P = (septs[-1]-mu)/(3*variance)
+print("The probability for the event to happen is", norm.cdf(P))
+
+##################################################
+#### Calcul de la probabilité que l'evenement ####
+#### se produise en 2021                      ####
+##################################################
+
+mu = int(mean_sept + 12868298 - mean_mays)
+cov=np.cov(septs,mays)
+cov=cov[0,1]
+variance = var_sept = math.sqrt((st.variance(septs) + st.variance(mays)+2*cov)/i)
+x = np.linspace(mu-4*10**6, mu+4*10**6, 100)
+
+plt.plot(x, norm.pdf(x, mu, 3*variance), color='black')
+plt.axvline(x=septs[-1], ymin=0, ymax=(norm.pdf(septs[-1], mu, 3*variance))/(5.75*10**(-7)), linestyle='--', color='darkred')
+plt.plot(septs[-1], norm.pdf(septs[-1], mu, 3*variance), 'o', markersize=4, color='darkred')
+plt.xlim(mu-3*10**6,mu+3*10**6)
+plt.ylim(0,5.75*10**(-7))
+#plt.title('Probability of the event happening for 2021 September')
+plt.xlabel('Sea ice extent [km]$^2$')
+plt.ylabel('Probability')
 px=np.arange(mu-4*10**6, septs[-1], 100)
 plt.fill_between(px,norm.pdf(px, mu, 3*variance),color='red', alpha=0.5)
 plt.show()
