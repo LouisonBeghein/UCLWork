@@ -1,0 +1,278 @@
+setwd("~/UCLouvain/Mémoire/Analyse données/Fichiers données")
+dot <- read.csv2("DonneesPhys.csv", head=TRUE, sep=";", na.strings = "", stringsAsFactors = T)
+DOT <- subset(dot, Annee != 'Autre')
+dotd <- subset(dot, Ecole=='***' & Annee != 'Autre')
+par(xpd=FALSE)
+
+#############################################
+#### Questions raisonnement scientifique ####
+#############################################
+
+
+QR <- c('QR2', 'QR3', 'QR4', 'QR5', 'QR6', 'QR7', 'QR8', 
+      'QR9', 'QR10', 'QR11', 'QR12', 'QR13', 'QR14', 'QR15')
+
+
+############ GRAPHIQUE ENSEMBLE QUESTIONS (TOUTES ECOLES) ######################
+means <- mean(DOT$QR1, na.rm = TRUE)
+nums = c(1:15)
+titre <- 'Raisonnement scientifique toutes écoles'
+
+for (i in DOT[QR]) {
+  means <- cbind(means, mean(i, na.rm = TRUE))
+}
+
+percs <- 100*means
+print(mean(percs))
+print(sd(percs))
+barplot(percs, main = titre, ylim=c(0,110), 
+        names.arg=nums, ylab = 'Pourcentage de bonnes réponses')  
+grid(nx=NA, ny=NULL, col="gray19")
+abline(h = mean(percs), lwd = 2)
+abline(h = mean(percs) + sd(percs))
+abline(h = mean(percs) - sd(percs))
+################################################################################
+############ GRAPHIQUE ENSEMBLE QUESTIONS (ECOLE E) ############################
+means <- mean(dotd$QR1, na.rm = TRUE)
+nums = c(1:15)
+titre <- 'Raisonnement scientifique école E'
+
+for (i in dotd[QR]) {
+  means <- cbind(means, mean(i, na.rm = TRUE))
+}
+
+percs <- 100*means
+print(mean(percs))
+print(sd(percs))
+barplot(percs, main = titre, ylim=c(0,110), 
+        names.arg=nums, ylab = 'Pourcentage de bonnes réponses')  
+grid(nx=NA, ny=NULL, col="gray19")
+abline(h = mean(percs), lwd = 2)
+abline(h = mean(percs) + sd(percs))
+abline(h = mean(percs) - sd(percs))
+################################################################################
+
+############ MOYENNE ET ECART TYPE SCORELAWSON #################################
+#### Ensemble école et école E ####
+print(mean(DOT$ScoreLawson), na.rm = TRUE)
+print(sd(DOT$ScoreLawson), na.rm = TRUE)
+print(mean(dotd$ScoreLawson), na.rm = TRUE)
+print(sd(dotd$ScoreLawson), na.rm = TRUE)
+#### Ensemble écoles (1ere vs 2emes) ####
+print(mean(DOT$ScoreLawson[DOT$Annee == 1]), na.rm = TRUE)
+print(sd(DOT$ScoreLawson[DOT$Annee == 1]), na.rm = TRUE)
+print(mean(DOT$ScoreLawson[DOT$Annee == 2]), na.rm = TRUE)
+print(sd(DOT$ScoreLawson[DOT$Annee == 2]), na.rm = TRUE)
+#### Ecole E (1ere vs 2emes)) ####
+print(mean(dotd$ScoreLawson[dotd$Annee == 1]), na.rm = TRUE)
+print(sd(dotd$ScoreLawson[dotd$Annee == 1]), na.rm = TRUE)
+print(mean(dotd$ScoreLawson[dotd$Annee == 2]), na.rm = TRUE)
+print(sd(dotd$ScoreLawson[dotd$Annee == 2]), na.rm = TRUE)
+################################################################################
+
+########### DIFFERENCE IMM VS NON IMM POUR CHAQUE Q ############################
+
+############ Immersion vs non-immersion #######
+############ 1eres ############################
+
+cond1 <- dotd$Imm == 0 & dotd$Annee == 1
+cond2 <- dotd$Imm != 0 & dotd$Annee == 1
+titre <- "Raisonnement scientifique (1ère année)"
+leg <- c("Non-immersion (N=78)","Immersion (N=50)")
+cols2 <- c("cornflowerblue","coral1")
+
+############ Immersion vs non-immersion #######
+############ 2emes ############################
+
+cond1 <- dotd$Imm == 0 & dotd$Annee == 2
+cond2 <- dotd$Imm != 0 & dotd$Annee == 2
+titre <- "Raisonnement scientifique (2ème année)"
+leg <- c("Non-immersion (N=76)","Immersion (N=42)")
+cols2 <- c("cornflowerblue","coral1")
+
+############ GENERER GRAPHIQUE 2 GROUPES #######################################
+meansNI <- mean(dotd$QR1[cond1], na.rm = TRUE)
+meansI <- mean(dotd$QR1[cond2], na.rm = TRUE)
+nums = c(1:15)
+
+for (i in dotd[QR]) {
+  meansNI <- cbind(meansNI, mean(i[cond1], na.rm = TRUE))
+  meansI <- cbind(meansI, mean(i[cond2], na.rm = TRUE))
+}
+
+percs <- rbind(100*meansNI, 100*meansI)
+
+barplot(percs, main = titre,
+        ylim=c(0,110), beside=TRUE, col=cols2, names.arg=nums, ylab = 'Pourcentage de bonnes réponses')  
+grid(nx=NA, ny=NULL, col="gray19")
+abline(h = mean(100*meansNI), col = "cornflowerblue", lwd = 2)
+abline(h = mean(100*meansI), col = "coral1", lwd = 2)
+legend("topleft", leg, cex = 0.75, fill = cols2)
+print(mean(100*meansNI))
+print(mean(100*meansI)) 
+
+t.test(meansNI, meansI)
+#### Diff, stat sign ? ####
+
+i <- dotd$QR13
+
+diff <- mean(i[dotd$Immbin == 1], na.rm = TRUE) - mean(i[dotd$Immbin == 0], na.rm = TRUE)
+print(diff)
+t.test(i[dotd$Immbin == 0], i[dotd$Immbin == 1])
+
+############################
+#### Questions physique ####
+############################
+
+#### Identification force ####
+
+#### Barplots #### QP1 pour caisse mobile, QP3 pour caisse immobile, QP4 pour livre
+#### Imm vs non-imm ###############################################################
+
+titre <- "Livre posé"
+
+cond11 <- DOT$Annee == 1 & DOT$Sexe == "M"
+cond12 <- dotd$Annee == 1 & dotd$Immbin == 0 & dotd$Sexe == "M"
+cond13 <- dotd$Annee == 1 & dotd$Immbin == 1 & dotd$Sexe == "M"
+
+cond21 <- DOT$Annee == 1 & DOT$Sexe == "F"
+cond22 <- dotd$Annee == 1 & dotd$Immbin == 0 & dotd$Sexe == "F"
+cond23 <- dotd$Annee == 1 & dotd$Immbin == 1 & dotd$Sexe == "F"
+
+cond31 <- DOT$Annee == 2 & DOT$Sexe == "M"
+cond32 <- dotd$Annee == 2 & dotd$Immbin == 0 & dotd$Sexe == "M"
+cond33 <- dotd$Annee == 2 & dotd$Immbin == 1 & dotd$Sexe == "M"
+
+cond41 <- DOT$Annee == 2 & DOT$Sexe == "F"
+cond42 <- dotd$Annee == 2 & dotd$Immbin == 0 & dotd$Sexe == "F"
+cond43 <- dotd$Annee == 2 & dotd$Immbin == 1 & dotd$Sexe == "F"
+
+sd1 <- rbind(mean(dotd$QP4[cond11], na.rm = TRUE), 
+             mean(dotd$QP4[cond12], na.rm = TRUE), 
+             mean(dotd$QP4[cond13], na.rm = TRUE))
+sd2 <- rbind(mean(dotd$QP4[cond21], na.rm = TRUE), 
+             mean(dotd$QP4[cond22], na.rm = TRUE), 
+             mean(dotd$QP4[cond23], na.rm = TRUE))
+sd3 <- rbind(mean(dotd$QP4[cond31], na.rm = TRUE), 
+             mean(dotd$QP4[cond32], na.rm = TRUE), 
+             mean(dotd$QP4[cond33], na.rm = TRUE))
+sd4 <- rbind(mean(dotd$QP4[cond41], na.rm = TRUE), 
+             mean(dotd$QP4[cond42], na.rm = TRUE), 
+             mean(dotd$QP4[cond43], na.rm = TRUE))
+sd <- cbind(sd1, sd2, sd3, sd4)
+barplot(sd, beside = TRUE, ylim = c(0,2.3) , col = c("Grey", "cornflowerblue","coral1"),
+        names.arg = c('Garcons 1ere', 'Filles 1ere', 'Garcons 2eme', 'Filles 2eme'),
+        main = titre, ylab = 'moyenne des scores')
+legend('topleft', c('Ensemble écoles','Non-immersion (E)', 'Immersion (E)'), 
+       cex = 0.65, fill = c("Grey", "cornflowerblue","coral1"))
+
+
+#### Phénomènes matière ####
+
+titre <- "Bouilloire"
+
+cond11 <- DOT$Annee == 1 & DOT$Sexe == "M"
+cond12 <- dotd$Annee == 1 & dotd$Immbin == 0 & dotd$Sexe == "M"
+cond13 <- dotd$Annee == 1 & dotd$Immbin == 1 & dotd$Sexe == "M"
+
+cond21 <- DOT$Annee == 1 & DOT$Sexe == "F"
+cond22 <- dotd$Annee == 1 & dotd$Immbin == 0 & dotd$Sexe == "F"
+cond23 <- dotd$Annee == 1 & dotd$Immbin == 1 & dotd$Sexe == "F"
+
+cond31 <- DOT$Annee == 2 & DOT$Sexe == "M"
+cond32 <- dotd$Annee == 2 & dotd$Immbin == 0 & dotd$Sexe == "M"
+cond33 <- dotd$Annee == 2 & dotd$Immbin == 1 & dotd$Sexe == "M"
+
+cond41 <- DOT$Annee == 2 & DOT$Sexe == "F"
+cond42 <- dotd$Annee == 2 & dotd$Immbin == 0 & dotd$Sexe == "F"
+cond43 <- dotd$Annee == 2 & dotd$Immbin == 1 & dotd$Sexe == "F"
+
+sd1 <- rbind(mean(dotd$QP19[cond11], na.rm = TRUE), 
+             mean(dotd$QP19[cond12], na.rm = TRUE), 
+             mean(dotd$QP19[cond13], na.rm = TRUE))
+sd2 <- rbind(mean(dotd$QP19[cond21], na.rm = TRUE), 
+             mean(dotd$QP19[cond22], na.rm = TRUE), 
+             mean(dotd$QP19[cond23], na.rm = TRUE))
+sd3 <- rbind(mean(dotd$QP19[cond31], na.rm = TRUE), 
+             mean(dotd$QP19[cond32], na.rm = TRUE), 
+             mean(dotd$QP19[cond33], na.rm = TRUE))
+sd4 <- rbind(mean(dotd$QP19[cond41], na.rm = TRUE), 
+             mean(dotd$QP19[cond42], na.rm = TRUE), 
+             mean(dotd$QP19[cond43], na.rm = TRUE))
+sd <- cbind(sd1, sd2, sd3, sd4)
+barplot(sd, beside = TRUE, ylim = c(0,1) , col = c("Grey", "cornflowerblue","coral1"),
+        names.arg = c('Garcons 1ere', 'Filles 1ere', 'Garcons 2eme', 'Filles 2eme'),
+        main = titre, ylab = 'moyenne des scores')
+legend('topleft', c('Ensemble écoles','Non-immersion (E)', 'Immersion (E)'), 
+       cex = 0.75, fill = c("Grey", "cornflowerblue","coral1"))
+
+
+#### Autres questions ####
+
+titre <- "qp19"
+
+cond11 <- DOT$Annee == 1 & DOT$Sexe == "M"
+cond12 <- dotd$Annee == 1 & dotd$Immbin == 0 & dotd$Sexe == "M"
+cond13 <- dotd$Annee == 1 & dotd$Immbin == 1 & dotd$Sexe == "M"
+
+cond21 <- DOT$Annee == 1 & DOT$Sexe == "F"
+cond22 <- dotd$Annee == 1 & dotd$Immbin == 0 & dotd$Sexe == "F"
+cond23 <- dotd$Annee == 1 & dotd$Immbin == 1 & dotd$Sexe == "F"
+
+cond31 <- DOT$Annee == 2 & DOT$Sexe == "M"
+cond32 <- dotd$Annee == 2 & dotd$Immbin == 0 & dotd$Sexe == "M"
+cond33 <- dotd$Annee == 2 & dotd$Immbin == 1 & dotd$Sexe == "M"
+
+cond41 <- DOT$Annee == 2 & DOT$Sexe == "F"
+cond42 <- dotd$Annee == 2 & dotd$Immbin == 0 & dotd$Sexe == "F"
+cond43 <- dotd$Annee == 2 & dotd$Immbin == 1 & dotd$Sexe == "F"
+
+sd1 <- rbind(mean(dotd$QP19[cond11], na.rm = TRUE), 
+             mean(dotd$QP19[cond12], na.rm = TRUE), 
+             mean(dotd$QP19[cond13], na.rm = TRUE))
+sd2 <- rbind(mean(dotd$QP19[cond21], na.rm = TRUE), 
+             mean(dotd$QP19[cond22], na.rm = TRUE), 
+             mean(dotd$QP19[cond23], na.rm = TRUE))
+sd3 <- rbind(mean(dotd$QP19[cond31], na.rm = TRUE), 
+             mean(dotd$QP19[cond32], na.rm = TRUE), 
+             mean(dotd$QP19[cond33], na.rm = TRUE))
+sd4 <- rbind(mean(dotd$QP19[cond41], na.rm = TRUE), 
+             mean(dotd$QP19[cond42], na.rm = TRUE), 
+             mean(dotd$QP19[cond43], na.rm = TRUE))
+sd <- cbind(sd1, sd2, sd3, sd4)
+barplot(sd, beside = TRUE, ylim = c(0,4) , col = c("Grey", "cornflowerblue","coral1"),
+        names.arg = c('Garcons 1ere', 'Filles 1ere', 'Garcons 2eme', 'Filles 2eme'),
+        main = titre, ylab = 'moyenne des scores')
+legend('topleft', c('Ensemble écoles','Non-immersion (E)', 'Immersion (E)'), 
+       cex = 0.75, fill = c("Grey", "cornflowerblue","coral1"))
+
+#### Questions physiques: ensemble, ecole E, imm angl, imm neerl. ####
+
+titre <- "Bouilloire"
+quest <- QP19
+
+cond11 <- DOT$Annee == 1
+cond12 <- dotd$Annee == 1
+cond13 <- dotd$Annee == 1 & dotd$Imm == 1
+cond14 <- dotd$Annee == 1 & dotd$Imm == 2 
+
+cond21 <- DOT$Annee == 2
+cond22 <- dotd$Annee == 2
+cond23 <- dotd$Annee == 2 & dotd$Imm == 1
+cond24 <- dotd$Annee == 2 & dotd$Imm == 2 
+
+sd1 <- rbind(mean(DOT$QP19[cond11], na.rm = TRUE), 
+             mean(dotd$QP19[cond12], na.rm = TRUE), 
+             mean(dotd$QP19[cond13], na.rm = TRUE),
+             mean(dotd$QP19[cond14], na.rm = TRUE))
+sd2 <- rbind(mean(DOT$QP19[cond21], na.rm = TRUE), 
+             mean(dotd$QP19[cond22], na.rm = TRUE), 
+             mean(dotd$QP19[cond23], na.rm = TRUE),
+             mean(dotd$QP19[cond24], na.rm = TRUE))
+
+sd <- cbind(sd1, sd2)
+barplot(sd, beside = TRUE, ylim = c(0,1.15) , col = c("Grey", "cornflowerblue", "darkolivegreen3", "yellow"),
+        names.arg = c('1ère année', '2ème année'),
+        main = titre, ylab = 'moyenne des scores')
+legend('topleft', c('Ens. écoles','Ecole E', 'Imm. angl.', 'Imm. néerl.'), 
+       cex = 0.70, fill = c("Grey", "cornflowerblue", "darkolivegreen3", "yellow"))
