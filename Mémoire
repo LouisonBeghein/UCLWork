@@ -276,3 +276,305 @@ barplot(sd, beside = TRUE, ylim = c(0,1.15) , col = c("Grey", "cornflowerblue", 
         main = titre, ylab = 'moyenne des scores')
 legend('topleft', c('Ens. écoles','Ecole E', 'Imm. angl.', 'Imm. néerl.'), 
        cex = 0.70, fill = c("Grey", "cornflowerblue", "darkolivegreen3", "yellow"))
+
+##################
+#### TABLEAUX ####
+##################
+
+DOT <- subset(dot, Annee != 'Autre')
+EN <- dotd$Imm == 1
+NE <- dotd$Imm == 2
+NI <- dotd$Imm == 0
+
+#####################################
+#### Tableau raisonnement facile ####
+#####################################
+
+## moyennes et ecart-types ##
+
+print(mean(DOT$QRF[DOT$Annee == 1]), na.rm = TRUE)
+print(mean(DOT$QRF[DOT$Annee == 2]), na.rm = TRUE)
+print(sd(DOT$QRF[DOT$Annee == 1]), na.rm = TRUE)
+print(sd(DOT$QRF[DOT$Annee == 2]), na.rm = TRUE)
+
+print(mean(dotd$QRF[dotd$Annee == 1]), na.rm = TRUE)
+print(mean(dotd$QRF[dotd$Annee == 2]), na.rm = TRUE)
+print(sd(dotd$QRF[dotd$Annee == 1]), na.rm = TRUE)
+print(sd(dotd$QRF[dotd$Annee == 2]), na.rm = TRUE)
+
+print(mean(dotd$QRF[dotd$Annee == 1 & dotd$Imm == 0]), na.rm = TRUE)
+print(mean(dotd$QRF[dotd$Annee == 2 & dotd$Imm == 0]), na.rm = TRUE)
+print(sd(dotd$QRF[dotd$Annee == 1 & dotd$Imm == 0]), na.rm = TRUE)
+print(sd(dotd$QRF[dotd$Annee == 2 & dotd$Imm == 0]), na.rm = TRUE)
+
+print(mean(dotd$QRF[dotd$Annee == 1 & dotd$Imm == 1]), na.rm = TRUE)
+print(mean(dotd$QRF[dotd$Annee == 2 & dotd$Imm == 1]), na.rm = TRUE)
+print(sd(dotd$QRF[dotd$Annee == 1 & dotd$Imm == 1]), na.rm = TRUE)
+print(sd(dotd$QRF[dotd$Annee == 2 & dotd$Imm == 1]), na.rm = TRUE)
+
+print(mean(dotd$QRF[dotd$Annee == 1 & dotd$Imm == 2]), na.rm = TRUE)
+print(mean(dotd$QRF[dotd$Annee == 2 & dotd$Imm == 2]), na.rm = TRUE)
+print(sd(dotd$QRF[dotd$Annee == 1 & dotd$Imm == 2]), na.rm = TRUE)
+print(sd(dotd$QRF[dotd$Annee == 2 & dotd$Imm == 2]), na.rm = TRUE)
+
+## p-valeurs ##
+
+t.test(DOT$QRF[DOT$Annee == 1], dotd$QRF[dotd$Annee == 1])
+t.test(DOT$QRF[DOT$Annee == 2], dotd$QRF[dotd$Annee == 2])
+
+t.test(DOT$QRF[DOT$Annee == 1], dotd$QRF[dotd$Annee == 1 & dotd$Imm == 0])
+t.test(DOT$QRF[DOT$Annee == 2], dotd$QRF[dotd$Annee == 2 & dotd$Imm == 0])
+
+t.test(DOT$QRF[DOT$Annee == 1], dotd$QRF[dotd$Annee == 1 & dotd$Imm == 1])
+t.test(DOT$QRF[DOT$Annee == 2], dotd$QRF[dotd$Annee == 2 & dotd$Imm == 1])
+
+t.test(DOT$QRF[DOT$Annee == 1], dotd$QRF[dotd$Annee == 1 & dotd$Imm == 2])
+t.test(DOT$QRF[DOT$Annee == 2], dotd$QRF[dotd$Annee == 2 & dotd$Imm == 2])
+
+#####################################
+#### Tableau raisonnement interm ####
+#####################################
+
+## moyennes et ecart-types ##
+
+print(mean(DOT$QRI[DOT$Annee == 1]), na.rm = TRUE)
+print(mean(DOT$QRI[DOT$Annee == 2]), na.rm = TRUE)
+print(sd(DOT$QRI[DOT$Annee == 1]), na.rm = TRUE)
+print(sd(DOT$QRI[DOT$Annee == 2]), na.rm = TRUE)
+
+print(mean(dotd$QRI[dotd$Annee == 1]), na.rm = TRUE)
+print(mean(dotd$QRI[dotd$Annee == 2]), na.rm = TRUE)
+print(sd(dotd$QRI[dotd$Annee == 1]), na.rm = TRUE)
+print(sd(dotd$QRI[dotd$Annee == 2]), na.rm = TRUE)
+
+print(mean(dotd$QRI[dotd$Annee == 1 & dotd$Imm == 0]), na.rm = TRUE)
+print(mean(dotd$QRI[dotd$Annee == 2 & dotd$Imm == 0]), na.rm = TRUE)
+print(sd(dotd$QRI[dotd$Annee == 1 & dotd$Imm == 0]), na.rm = TRUE)
+print(sd(dotd$QRI[dotd$Annee == 2 & dotd$Imm == 0]), na.rm = TRUE)
+
+print(mean(dotd$QRI[dotd$Annee == 1 & dotd$Imm == 1]), na.rm = TRUE)
+print(mean(dotd$QRI[dotd$Annee == 2 & dotd$Imm == 1]), na.rm = TRUE)
+print(sd(dotd$QRI[dotd$Annee == 1 & dotd$Imm == 1]), na.rm = TRUE)
+print(sd(dotd$QRI[dotd$Annee == 2 & dotd$Imm == 1]), na.rm = TRUE)
+
+print(mean(dotd$QRI[dotd$Annee == 1 & dotd$Imm == 2]), na.rm = TRUE)
+print(mean(dotd$QRI[dotd$Annee == 2 & dotd$Imm == 2]), na.rm = TRUE)
+print(sd(dotd$QRI[dotd$Annee == 1 & dotd$Imm == 2]), na.rm = TRUE)
+print(sd(dotd$QRI[dotd$Annee == 2 & dotd$Imm == 2]), na.rm = TRUE)
+
+## p-valeurs ##
+
+t.test(DOT$QRI[DOT$Annee == 1], dotd$QRI[dotd$Annee == 1])
+t.test(DOT$QRI[DOT$Annee == 2], dotd$QRI[dotd$Annee == 2])
+
+t.test(DOT$QRI[DOT$Annee == 1], dotd$QRI[dotd$Annee == 1 & dotd$Imm == 0])
+t.test(DOT$QRI[DOT$Annee == 2], dotd$QRI[dotd$Annee == 2 & dotd$Imm == 0])
+
+t.test(DOT$QRI[DOT$Annee == 1], dotd$QRI[dotd$Annee == 1 & dotd$Imm == 1])
+t.test(DOT$QRI[DOT$Annee == 2], dotd$QRI[dotd$Annee == 2 & dotd$Imm == 1])
+
+t.test(DOT$QRI[DOT$Annee == 1], dotd$QRI[dotd$Annee == 1 & dotd$Imm == 2])
+t.test(DOT$QRI[DOT$Annee == 2], dotd$QRI[dotd$Annee == 2 & dotd$Imm == 2])
+
+t.test(dotd$QRI[dotd$Annee == 2 & dotd$Imm == 1], dotd$QRI[dotd$Annee == 2 & dotd$Imm == 0])
+
+##############################################
+#### Tableau raisonnement facile + interm ####
+##############################################
+
+print(mean(DOT$QRR[DOT$Annee == 1]), na.rm = TRUE)
+print(mean(DOT$QRR[DOT$Annee == 2]), na.rm = TRUE)
+print(sd(DOT$QRR[DOT$Annee == 1]), na.rm = TRUE)
+print(sd(DOT$QRR[DOT$Annee == 2]), na.rm = TRUE)
+
+print(mean(dotd$QRR[dotd$Annee == 1]), na.rm = TRUE)
+print(mean(dotd$QRR[dotd$Annee == 2]), na.rm = TRUE)
+print(sd(dotd$QRR[dotd$Annee == 1]), na.rm = TRUE)
+print(sd(dotd$QRR[dotd$Annee == 2]), na.rm = TRUE)
+
+print(mean(dotd$QRR[dotd$Annee == 1 & dotd$Imm == 0]), na.rm = TRUE)
+print(mean(dotd$QRR[dotd$Annee == 2 & dotd$Imm == 0]), na.rm = TRUE)
+print(sd(dotd$QRR[dotd$Annee == 1 & dotd$Imm == 0]), na.rm = TRUE)
+print(sd(dotd$QRR[dotd$Annee == 2 & dotd$Imm == 0]), na.rm = TRUE)
+
+print(mean(dotd$QRR[dotd$Annee == 1 & dotd$Imm == 1]), na.rm = TRUE)
+print(mean(dotd$QRR[dotd$Annee == 2 & dotd$Imm == 1]), na.rm = TRUE)
+print(sd(dotd$QRR[dotd$Annee == 1 & dotd$Imm == 1]), na.rm = TRUE)
+print(sd(dotd$QRR[dotd$Annee == 2 & dotd$Imm == 1]), na.rm = TRUE)
+
+print(mean(dotd$QRR[dotd$Annee == 1 & dotd$Imm == 2]), na.rm = TRUE)
+print(mean(dotd$QRR[dotd$Annee == 2 & dotd$Imm == 2]), na.rm = TRUE)
+print(sd(dotd$QRR[dotd$Annee == 1 & dotd$Imm == 2]), na.rm = TRUE)
+print(sd(dotd$QRR[dotd$Annee == 2 & dotd$Imm == 2]), na.rm = TRUE)
+
+## p-valeurs ##
+
+t.test(DOT$QRR[DOT$Annee == 1], dotd$QRR[dotd$Annee == 1])
+t.test(DOT$QRR[DOT$Annee == 2], dotd$QRR[dotd$Annee == 2])
+
+t.test(DOT$QRR[DOT$Annee == 1], dotd$QRR[dotd$Annee == 1 & dotd$Imm == 0])
+t.test(DOT$QRR[DOT$Annee == 2], dotd$QRR[dotd$Annee == 2 & dotd$Imm == 0])
+
+t.test(DOT$QRR[DOT$Annee == 1], dotd$QRR[dotd$Annee == 1 & dotd$Imm == 1])
+t.test(DOT$QRR[DOT$Annee == 2], dotd$QRR[dotd$Annee == 2 & dotd$Imm == 1])
+
+t.test(DOT$QRR[DOT$Annee == 1], dotd$QRR[dotd$Annee == 1 & dotd$Imm == 2])
+t.test(DOT$QRR[DOT$Annee == 2], dotd$QRR[dotd$Annee == 2 & dotd$Imm == 2])
+
+##########################
+#### Tableau physique ####
+##########################
+
+#### Questions identif. forces ####
+
+mean(c(DOT1$QP1/2, DOT1$QP2/2, DOT1$QP3/2, DOT1$QP4/2), na.rm = TRUE)
+sd(c(DOT1$QP1/2, DOT1$QP2/2, DOT1$QP3/2, DOT1$QP4/2), na.rm = TRUE)
+mean(c(DOT2$QP1/2, DOT2$QP2/2, DOT2$QP3/2, DOT2$QP4/2), na.rm = TRUE)
+sd(c(DOT2$QP1/2, DOT2$QP2/2, DOT2$QP3/2, DOT2$QP4/2), na.rm = TRUE)
+
+mean(c(dotd1$QP1/2, dotd1$QP2/2, dotd1$QP3/2, dotd1$QP4/2), na.rm = TRUE)
+sd(c(dotd1$QP1/2, dotd1$QP2/2, dotd1$QP3/2, dotd1$QP4/2), na.rm = TRUE)
+mean(c(dotd2$QP1/2, dotd2$QP2/2, dotd2$QP3/2, dotd2$QP4/2), na.rm = TRUE)
+sd(c(dotd2$QP1/2, dotd2$QP2/2, dotd2$QP3/2, dotd2$QP4/2), na.rm = TRUE)
+
+mean(c(dotd1$QP1[EN]/2, dotd1$QP2[EN]/2, dotd1$QP3[EN]/2, dotd1$QP4[EN]/2), na.rm = TRUE)
+sd(c(dotd1$QP1[EN]/2, dotd1$QP2[EN]/2, dotd1$QP3[EN]/2, dotd1$QP4[EN]/2), na.rm = TRUE)
+mean(c(dotd2$QP1[EN]/2, dotd2$QP2[EN]/2, dotd2$QP3[EN]/2, dotd2$QP4[EN]/2), na.rm = TRUE)
+sd(c(dotd2$QP1[EN]/2, dotd2$QP2[EN]/2, dotd2$QP3[EN]/2, dotd2$QP4[EN]/2), na.rm = TRUE)
+
+mean(c(dotd1$QP1[NE]/2, dotd1$QP2[NE]/2, dotd1$QP3[NE]/2, dotd1$QP4[NE]/2), na.rm = TRUE)
+sd(c(dotd1$QP1[NE]/2, dotd1$QP2[NE]/2, dotd1$QP3[NE]/2, dotd1$QP4[NE]/2), na.rm = TRUE)
+mean(c(dotd2$QP1[NE]/2, dotd2$QP2[NE]/2, dotd2$QP3[NE]/2, dotd2$QP4[NE]/2), na.rm = TRUE)
+sd(c(dotd2$QP1[NE]/2, dotd2$QP2[NE]/2, dotd2$QP3[NE]/2, dotd2$QP4[NE]/2), na.rm = TRUE)
+
+#### Questions descript./pred. force ####
+
+mean(c(DOT1$QP5, DOT1$QP6/3, DOT1$QP7/3, DOT1$QP8/3, DOT1$QP9/3, DOT1$QP10/3, DOT1$QP11/3), na.rm = TRUE)
+sd(c(DOT1$QP5, DOT1$QP6/3, DOT1$QP7/3, DOT1$QP8/3, DOT1$QP9/3, DOT1$QP10/3, DOT1$QP11/3), na.rm = TRUE)
+mean(c(DOT2$QP5, DOT2$QP6/3, DOT2$QP7/3, DOT2$QP8/3, DOT2$QP9/3, DOT2$QP10/3, DOT2$QP11/3), na.rm = TRUE)
+sd(c(DOT2$QP5, DOT2$QP6/3, DOT2$QP7/3, DOT2$QP8/3, DOT2$QP9/3, DOT1$QP10/3, DOT2$QP11/3), na.rm = TRUE)
+
+mean(c(dotd1$QP5, dotd1$QP6/3, dotd1$QP7/3, dotd1$QP8/3, dotd1$QP9/3, dotd1$QP10/3, dotd1$QP11/3), na.rm = TRUE)
+sd(c(dotd1$QP5, dotd1$QP6/3, dotd1$QP7/3, dotd1$QP8/3, dotd1$QP9/3, dotd1$QP10/3, dotd1$QP11/3), na.rm = TRUE)
+mean(c(dotd2$QP5, dotd2$QP6/3, dotd2$QP7/3, dotd2$QP8/3, dotd2$QP9/3, dotd2$QP10/3, dotd2$QP11/3), na.rm = TRUE)
+sd(c(dotd2$QP5, dotd2$QP6/3, dotd2$QP7/3, dotd2$QP8/3, dotd2$QP9/3, dotd2$QP10/3, dotd2$QP11/3), na.rm = TRUE)
+
+mean(c(dotd1$QP5[EN], dotd1$QP6[EN]/3, dotd1$QP7[EN]/3, dotd1$QP8[EN]/3, dotd1$QP9[EN]/3, dotd1$QP10[EN]/3, dotd1$QP11[EN]/3), na.rm = TRUE)
+sd(c(dotd1$QP5[EN], dotd1$QP6[EN]/3, dotd1$QP7[EN]/3, dotd1$QP8[EN]/3, dotd1$QP9[EN]/3, dotd1$QP10[EN]/3, dotd1$QP11[EN]/3), na.rm = TRUE)
+mean(c(dotd2$QP5[EN], dotd2$QP6[EN]/3, dotd2$QP7[EN]/3, dotd2$QP8[EN]/3, dotd2$QP9[EN]/3, dotd2$QP10[EN]/3, dotd2$QP11[EN]/3), na.rm = TRUE)
+sd(c(dotd2$QP5[EN], dotd2$QP6[EN]/3, dotd2$QP7[EN]/3, dotd2$QP8[EN]/3, dotd2$QP9[EN]/3, dotd2$QP10[EN]/3, dotd2$QP11[EN]/3), na.rm = TRUE)
+
+mean(c(dotd1$QP5[NE], dotd1$QP6[NE]/3, dotd1$QP7[NE]/3, dotd1$QP8[NE]/3, dotd1$QP9[NE]/3, dotd1$QP10[NE]/3, dotd1$QP11[NE]/3), na.rm = TRUE)
+sd(c(dotd1$QP5[NE], dotd1$QP6[NE]/3, dotd1$QP7[NE]/3, dotd1$QP8[NE]/3, dotd1$QP9[NE]/3, dotd1$QP10[NE]/3, dotd1$QP11[NE]/3), na.rm = TRUE)
+mean(c(dotd2$QP5[NE], dotd2$QP6[NE]/3, dotd2$QP7[NE]/3, dotd2$QP8[NE]/3, dotd2$QP9[NE]/3, dotd2$QP10[NE]/3, dotd2$QP11[NE]/3), na.rm = TRUE)
+sd(c(dotd2$QP5[NE], dotd2$QP6[NE]/3, dotd2$QP7[NE]/3, dotd2$QP8[NE]/3, dotd2$QP9[NE]/3, dotd2$QP10[NE]/3, dotd2$QP11[NE]/3), na.rm = TRUE)
+
+#### Questions modèle matière ####
+
+mean(c(DOT1$QP12, DOT1$QP13, DOT1$QP14, DOT1$QP15, DOT1$QP16, DOT1$QP17), na.rm = TRUE)
+sd(c(DOT1$QP12, DOT1$QP13, DOT1$QP14, DOT1$QP15, DOT1$QP16, DOT1$QP17), na.rm = TRUE)
+mean(c(DOT2$QP12, DOT2$QP13, DOT2$QP14, DOT2$QP15, DOT2$QP16, DOT2$QP17), na.rm = TRUE)
+sd(c(DOT2$QP12, DOT2$QP13, DOT2$QP14, DOT2$QP15, DOT2$QP16, DOT2$QP17), na.rm = TRUE)
+
+mean(c(dotd1$QP12, dotd1$QP13, dotd1$QP14, dotd1$QP15, dotd1$QP16, dotd1$QP17), na.rm = TRUE)
+sd(c(dotd1$QP12, dotd1$QP13, dotd1$QP14, dotd1$QP15, dotd1$QP16, dotd1$QP17), na.rm = TRUE)
+mean(c(dotd2$QP12, dotd2$QP13, dotd2$QP14, dotd2$QP15, dotd2$QP16, dotd2$QP17), na.rm = TRUE)
+sd(c(dotd2$QP12, dotd2$QP13, dotd2$QP14, dotd2$QP15, dotd2$QP16, dotd2$QP17), na.rm = TRUE)
+
+mean(c(dotd1$QP12[EN], dotd1$QP13[EN], dotd1$QP14[EN], dotd1$QP15[EN], dotd1$QP16[EN], dotd1$QP17[EN]), na.rm = TRUE)
+sd(c(dotd1$QP12[EN], dotd1$QP13[EN], dotd1$QP14[EN], dotd1$QP15[EN], dotd1$QP16[EN], dotd1$QP17[EN]), na.rm = TRUE)
+mean(c(dotd2$QP12[EN], dotd2$QP13[EN], dotd2$QP14[EN], dotd2$QP15[EN], dotd2$QP16[EN], dotd2$QP17[EN]), na.rm = TRUE)
+sd(c(dotd2$QP12[EN], dotd2$QP13[EN], dotd2$QP14[EN], dotd2$QP15[EN], dotd2$QP16[EN], dotd2$QP17[EN]), na.rm = TRUE)
+
+mean(c(dotd1$QP12[NE], dotd1$QP13[NE], dotd1$QP14[NE], dotd1$QP15[NE], dotd1$QP16[NE], dotd1$QP17[NE]), na.rm = TRUE)
+sd(c(dotd1$QP12[NE], dotd1$QP13[NE], dotd1$QP14[NE], dotd1$QP15[NE], dotd1$QP16[NE], dotd1$QP17[NE]), na.rm = TRUE)
+mean(c(dotd2$QP12[NE], dotd2$QP13[NE], dotd2$QP14[NE], dotd2$QP15[NE], dotd2$QP16[NE], dotd2$QP17[NE]), na.rm = TRUE)
+sd(c(dotd2$QP12[NE], dotd2$QP13[NE], dotd2$QP14[NE], dotd2$QP15[NE], dotd2$QP16[NE], dotd2$QP17[NE]), na.rm = TRUE)
+
+#### Questions phénomènes (particules) ####
+
+mean(c(DOT1$QP18, DOT1$QP19), na.rm = TRUE)
+sd(c(DOT1$QP18, DOT1$QP19), na.rm = TRUE)
+mean(c(DOT2$QP18, DOT2$QP19), na.rm = TRUE)
+sd(c(DOT2$QP18, DOT2$QP19), na.rm = TRUE)
+
+mean(c(dotd1$QP18, dotd1$QP19), na.rm = TRUE)
+sd(c(dotd1$QP18, dotd1$QP19), na.rm = TRUE)
+mean(c(dotd2$QP18, dotd2$QP19), na.rm = TRUE)
+sd(c(dotd2$QP18, dotd2$QP19), na.rm = TRUE)
+
+mean(c(dotd1$QP18[EN], dotd1$QP19[EN]), na.rm = TRUE)
+sd(c(dotd1$QP18[EN], dotd1$QP19[EN]), na.rm = TRUE)
+mean(c(dotd2$QP18[EN], dotd2$QP19[EN]), na.rm = TRUE)
+sd(c(dotd2$QP18[EN], dotd2$QP19[EN]), na.rm = TRUE)
+
+mean(c(dotd1$QP18[NE], dotd1$QP19[NE]), na.rm = TRUE)
+sd(c(dotd1$QP18[NE], dotd1$QP19[NE]), na.rm = TRUE)
+mean(c(dotd2$QP18[NE], dotd2$QP19[NE]), na.rm = TRUE)
+sd(c(dotd2$QP18[NE], dotd2$QP19[NE]), na.rm = TRUE)
+
+#### t.tests ####
+
+A <- c(dotd2$QP12, dotd2$QP13, dotd2$QP14, dotd2$QP15, dotd2$QP16, dotd2$QP17)
+B <- c(dotd2$QP12[NE], dotd2$QP13[NE], dotd2$QP14[NE], dotd2$QP15[NE], dotd2$QP16[NE], dotd2$QP17[NE])
+t.test(A,B)
+
+#### DIFFERENCE FILLE GARCONS EN IMMERSION ####
+#### Questions identif. forces ####
+
+Ma <- dotd$Sexe == 'M' & dotd$Immbin == 1
+Fi <- dotd$Sexe == 'F' & dotd$Immbin == 1
+
+mean(c(dotd1$QP1[Ma]/2, dotd1$QP2[Ma]/2, dotd1$QP3[Ma]/2, dotd1$QP4[Ma]/2), na.rm = TRUE)
+sd(c(dotd1$QP1[Ma]/2, dotd1$QP2[Ma]/2, dotd1$QP3[Ma]/2, dotd1$QP4[Ma]/2), na.rm = TRUE)
+mean(c(dotd2$QP1[Ma]/2, dotd2$QP2[Ma]/2, dotd2$QP3[Ma]/2, dotd2$QP4[Ma]/2), na.rm = TRUE)
+sd(c(dotd2$QP1[Ma]/2, dotd2$QP2[Ma]/2, dotd2$QP3[Ma]/2, dotd2$QP4[Ma]/2), na.rm = TRUE)
+
+mean(c(dotd1$QP1[Fi]/2, dotd1$QP2[Fi]/2, dotd1$QP3[Fi]/2, dotd1$QP4[Fi]/2), na.rm = TRUE)
+sd(c(dotd1$QP1[Fi]/2, dotd1$QP2[Fi]/2, dotd1$QP3[Fi]/2, dotd1$QP4[Fi]/2), na.rm = TRUE)
+mean(c(dotd2$QP1[Fi]/2, dotd2$QP2[Fi]/2, dotd2$QP3[Fi]/2, dotd2$QP4[Fi]/2), na.rm = TRUE)
+sd(c(dotd2$QP1[Fi]/2, dotd2$QP2[Fi]/2, dotd2$QP3[Fi]/2, dotd2$QP4[Fi]/2), na.rm = TRUE)
+
+#### Questions descript./pred. force ####
+
+mean(c(dotd1$QP5[Ma], dotd1$QP6[Ma]/3, dotd1$QP7[Ma]/3, dotd1$QP8[Ma]/3, dotd1$QP9[Ma]/3, dotd1$QP10[Ma]/3, dotd1$QP11[Ma]/3), na.rm = TRUE)
+sd(c(dotd1$QP5[Ma], dotd1$QP6[Ma]/3, dotd1$QP7[Ma]/3, dotd1$QP8[Ma]/3, dotd1$QP9[Ma]/3, dotd1$QP10[Ma]/3, dotd1$QP11[Ma]/3), na.rm = TRUE)
+mean(c(dotd2$QP5[Ma], dotd2$QP6[Ma]/3, dotd2$QP7[Ma]/3, dotd2$QP8[Ma]/3, dotd2$QP9[Ma]/3, dotd2$QP10[Ma]/3, dotd2$QP11[Ma]/3), na.rm = TRUE)
+sd(c(dotd2$QP5[Ma], dotd2$QP6[Ma]/3, dotd2$QP7[Ma]/3, dotd2$QP8[Ma]/3, dotd2$QP9[Ma]/3, dotd2$QP10[Ma]/3, dotd2$QP11[Ma]/3), na.rm = TRUE)
+
+mean(c(dotd1$QP5[Fi], dotd1$QP6[Fi]/3, dotd1$QP7[Fi]/3, dotd1$QP8[Fi]/3, dotd1$QP9[Fi]/3, dotd1$QP10[Fi]/3, dotd1$QP11[Fi]/3), na.rm = TRUE)
+sd(c(dotd1$QP5[Fi], dotd1$QP6[Fi]/3, dotd1$QP7[Fi]/3, dotd1$QP8[Fi]/3, dotd1$QP9[Fi]/3, dotd1$QP10[Fi]/3, dotd1$QP11[Fi]/3), na.rm = TRUE)
+mean(c(dotd2$QP5[Fi], dotd2$QP6[Fi]/3, dotd2$QP7[Fi]/3, dotd2$QP8[Fi]/3, dotd2$QP9[Fi]/3, dotd2$QP10[Fi]/3, dotd2$QP11[Fi]/3), na.rm = TRUE)
+sd(c(dotd2$QP5[Fi], dotd2$QP6[Fi]/3, dotd2$QP7[Fi]/3, dotd2$QP8[Fi]/3, dotd2$QP9[Fi]/3, dotd2$QP10[Fi]/3, dotd2$QP11[Fi]/3), na.rm = TRUE)
+
+#### Questions modèle matière ####
+
+mean(c(dotd1$QP12[Ma], dotd1$QP13[Ma], dotd1$QP14[Ma], dotd1$QP15[Ma], dotd1$QP16[Ma], dotd1$QP17[Ma]), na.rm = TRUE)
+sd(c(dotd1$QP12[Ma], dotd1$QP13[Ma], dotd1$QP14[Ma], dotd1$QP15[Ma], dotd1$QP16[Ma], dotd1$QP17[Ma]), na.rm = TRUE)
+mean(c(dotd2$QP12[Ma], dotd2$QP13[Ma], dotd2$QP14[Ma], dotd2$QP15[Ma], dotd2$QP16[Ma], dotd2$QP17[Ma]), na.rm = TRUE)
+sd(c(dotd2$QP12[Ma], dotd2$QP13[Ma], dotd2$QP14[Ma], dotd2$QP15[Ma], dotd2$QP16[Ma], dotd2$QP17[Ma]), na.rm = TRUE)
+
+mean(c(dotd1$QP12[Fi], dotd1$QP13[Fi], dotd1$QP14[Fi], dotd1$QP15[Fi], dotd1$QP16[Fi], dotd1$QP17[Fi]), na.rm = TRUE)
+sd(c(dotd1$QP12[Fi], dotd1$QP13[Fi], dotd1$QP14[Fi], dotd1$QP15[Fi], dotd1$QP16[Fi], dotd1$QP17[Fi]), na.rm = TRUE)
+mean(c(dotd2$QP12[Fi], dotd2$QP13[Fi], dotd2$QP14[Fi], dotd2$QP15[Fi], dotd2$QP16[Fi], dotd2$QP17[Fi]), na.rm = TRUE)
+sd(c(dotd2$QP12[Fi], dotd2$QP13[Fi], dotd2$QP14[Fi], dotd2$QP15[Fi], dotd2$QP16[Fi], dotd2$QP17[Fi]), na.rm = TRUE)
+
+#### Questions phénomènes (particules) ####
+
+mean(c(dotd1$QP18[Ma], dotd1$QP19[Ma]), na.rm = TRUE)
+sd(c(dotd1$QP18[Ma], dotd1$QP19[Ma]), na.rm = TRUE)
+mean(c(dotd2$QP18[Ma], dotd2$QP19[Ma]), na.rm = TRUE)
+sd(c(dotd2$QP18[Ma], dotd2$QP19[Ma]), na.rm = TRUE)
+
+mean(c(dotd1$QP18[Fi], dotd1$QP19[Fi]), na.rm = TRUE)
+sd(c(dotd1$QP18[Fi], dotd1$QP19[Fi]), na.rm = TRUE)
+mean(c(dotd2$QP18[Fi], dotd2$QP19[Fi]), na.rm = TRUE)
+sd(c(dotd2$QP18[Fi], dotd2$QP19[Fi]), na.rm = TRUE)
+
+#### t.tests ####
+
+A <- c(DOT2$QP18, DOT2$QP19)
+B <- c(dotd2$QP18[Ma], dotd2$QP19[Ma])
+t.test(A,B)
+
+
